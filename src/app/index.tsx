@@ -1,17 +1,19 @@
-import { Text, View, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, Text } from 'react-native';
+import { desserts } from '@/data/desserts';
+import DessertCard from '@/components/DessertCard';
 
-export default function Index() {
+export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Text>Edit src/app/index.tsx to edit this screen.</Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.count}>{desserts.length} dessert recipes saved</Text>
+      {desserts.map((dessert) => (
+        <DessertCard key={dessert.id} dessert={dessert} />
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  container: { padding: 16, backgroundColor: '#F7FAFC' },
+  count: { fontSize: 16, fontWeight: '600', color: '#702459', marginBottom: 12 },
 });
