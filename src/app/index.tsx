@@ -1,11 +1,24 @@
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { desserts } from '@/data/desserts';
 import DessertCard from '@/components/DessertCard';
+import { Spacing, FontSize } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+  const theme = useTheme();
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.count}>{desserts.length} dessert recipes saved</Text>
+    <ScrollView
+      contentContainerStyle={[
+        styles.container,
+        { paddingBottom: Spacing.md + insets.bottom }
+      ]}
+    >
+      <Text style={[styles.count, { color: theme.primary }]}>
+        {desserts.length} dessert recipes saved
+      </Text>
       {desserts.map((dessert) => (
         <DessertCard key={dessert.id} dessert={dessert} />
       ))}
@@ -14,6 +27,12 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: '#F7FAFC' },
-  count: { fontSize: 16, fontWeight: '600', color: '#702459', marginBottom: 12 },
+  container: {
+    padding: Spacing.md,
+  },
+  count: {
+    fontSize: FontSize.body,
+    fontWeight: '600',
+    marginBottom: Spacing.md,
+  },
 });
