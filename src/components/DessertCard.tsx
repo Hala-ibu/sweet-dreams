@@ -1,21 +1,37 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View, StyleProp, ViewStyle } from 'react-native';
 import type { Dessert } from '@/types';
+import { useTheme } from '@/hooks/use-theme';
+import { Spacing, FontSize, Radius } from '@/constants/theme';
 
 type DessertCardProps = {
   dessert: Dessert;
+  style?: StyleProp<ViewStyle>;
 };
 
-export default function DessertCard({ dessert }: DessertCardProps) {
+export default function DessertCard({ dessert, style }: DessertCardProps) {
+  const theme = useTheme();
+
   return (
     <Pressable
       onPress={() => console.log('Open dessert ID:', dessert.id)}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      style={({ pressed }) => [
+        styles.card,
+        { backgroundColor: theme.card, borderColor: theme.border },
+        pressed && styles.pressed,
+        style,
+      ]}
     >
-      <Image source={{ uri: dessert.photoUrl }} style={styles.image} />
+      <View>
+        <Image source={{ uri: dessert.photoUrl }} style={styles.image} />
+        <Text style={[styles.badge, { backgroundColor: theme.primary, color: theme.onPrimary }]}>
+          {dessert.difficulty}
+        </Text>
+      </View>
+
       <View style={styles.infoContainer}>
-        <Text style={styles.title}>{dessert.name}</Text>
-        <Text style={styles.details}>
-          {dessert.category} • Prep: {dessert.prepTimeMins}m • Bake: {dessert.bakeTimeMins}m ({dessert.difficulty})
+        <Text style={[styles.title, { color: theme.primary }]}>{dessert.name}</Text>
+        <Text style={[styles.details, { color: theme.muted }]}>
+          {dessert.category} • Prep: {dessert.prepTimeMins}m • Bake: {dessert.bakeTimeMins}m
         </Text>
       </View>
     </Pressable>
@@ -24,16 +40,38 @@ export default function DessertCard({ dessert }: DessertCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 12,
+    borderRadius: Radius.md,
     overflow: 'hidden',
-    backgroundColor: '#FFFaf0',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    marginBottom: 12,
+    marginBottom: Spacing.md,
   },
-  pressed: { opacity: 0.6 },
-  image: { width: '100%', height: 160 },
-  infoContainer: { padding: 12 },
-  title: { fontSize: 18, fontWeight: 'bold', color: '#702459' },
-  details: { fontSize: 14, color: '#4A5568', marginTop: 4 },
+  pressed: {
+    opacity: 0.6,
+  },
+  image: {
+    width: '100%',
+    aspectRatio: 16 / 9,
+  },
+  badge: {
+    position: 'absolute',
+    top: Spacing.sm,
+    right: Spacing.sm,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 2,
+    borderRadius: Radius.pill,
+    fontSize: FontSize.small,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  infoContainer: {
+    padding: Spacing.md,
+    gap: Spacing.xs,
+  },
+  title: {
+    fontSize: FontSize.title,
+    fontWeight: 'bold',
+  },
+  details: {
+    fontSize: FontSize.small,
+  },
 });
